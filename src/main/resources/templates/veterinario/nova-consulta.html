@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-br">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Cadastrar consulta - ClyvoVet</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+<div th:replace="~{fragments/nav :: nav}"></div>
+<main>
+    <p><a th:href="@{/app/veterinario/agenda}">&larr; Voltar</a></p>
+    <h1>Cadastrar consulta</h1>
+
+    <p class="mensagem-erro" th:if="${erroAgendamento}" th:text="${erroAgendamento}"></p>
+
+    <form class="cartao" th:action="@{/app/veterinario/consultas}" th:object="${form}" method="post">
+        <input type="hidden" th:field="*{veterinarioId}"/>
+
+        <div class="form-grupo">
+            <label for="petId">Pet</label>
+            <select id="petId" th:field="*{petId}">
+                <option value="">Selecione</option>
+                <option th:each="pet : ${pets}" th:value="${pet.id}" th:text="${pet.nome} + ' - ' + ${pet.tutor.nome}"></option>
+            </select>
+            <p class="erro-campo" th:if="${#fields.hasErrors('petId')}" th:errors="*{petId}"></p>
+        </div>
+
+        <div class="form-grupo">
+            <label for="dataHora">Data e hora</label>
+            <input type="datetime-local" id="dataHora" th:field="*{dataHora}"/>
+            <p class="erro-campo" th:if="${#fields.hasErrors('dataHora')}" th:errors="*{dataHora}"></p>
+        </div>
+
+        <div class="form-grupo">
+            <label for="tipoConsulta">Tipo de consulta</label>
+            <select id="tipoConsulta" th:field="*{tipoConsulta}">
+                <option value="">Selecione</option>
+                <option th:each="tipo : ${T(br.com.fiap.clyvovet.enums.TipoConsulta).values()}" th:value="${tipo}" th:text="${tipo}"></option>
+            </select>
+            <p class="erro-campo" th:if="${#fields.hasErrors('tipoConsulta')}" th:errors="*{tipoConsulta}"></p>
+        </div>
+
+        <div class="form-grupo">
+            <label for="observacoes">Observações</label>
+            <textarea id="observacoes" th:field="*{observacoes}" rows="3"></textarea>
+            <p class="erro-campo" th:if="${#fields.hasErrors('observacoes')}" th:errors="*{observacoes}"></p>
+        </div>
+
+        <button type="submit" class="botao">Cadastrar consulta</button>
+    </form>
+</main>
+</body>
+</html>

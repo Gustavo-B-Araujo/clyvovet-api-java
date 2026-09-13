@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-br">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Editar pet - ClyvoVet</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+<div th:replace="~{fragments/nav :: nav}"></div>
+<main>
+    <p><a th:href="@{/app/tutor/pets/{id}(id=${pet.id})}">&larr; Voltar</a></p>
+    <h1>Editar <span th:text="${pet.nome}"></span></h1>
+
+    <form class="cartao" th:action="@{/app/tutor/pets/{id}/editar(id=${pet.id})}" th:object="${form}" method="post">
+
+        <div class="form-grupo">
+            <label for="nome">Nome</label>
+            <input type="text" id="nome" th:field="*{nome}"/>
+            <p class="erro-campo" th:if="${#fields.hasErrors('nome')}" th:errors="*{nome}"></p>
+        </div>
+
+        <div class="form-grupo">
+            <label for="especie">Espécie</label>
+            <select id="especie" th:field="*{especie}">
+                <option value="">Selecione</option>
+                <option th:each="especie : ${especies}" th:value="${especie}" th:text="${especie}"></option>
+            </select>
+            <p class="erro-campo" th:if="${#fields.hasErrors('especie')}" th:errors="*{especie}"></p>
+        </div>
+
+        <div class="form-grupo">
+            <label for="raca">Raça</label>
+            <input type="text" id="raca" th:field="*{raca}"/>
+            <p class="erro-campo" th:if="${#fields.hasErrors('raca')}" th:errors="*{raca}"></p>
+        </div>
+
+        <div class="form-grupo">
+            <label for="dataNascimento">Data de nascimento</label>
+            <input type="date" id="dataNascimento" th:field="*{dataNascimento}"/>
+            <p class="erro-campo" th:if="${#fields.hasErrors('dataNascimento')}" th:errors="*{dataNascimento}"></p>
+        </div>
+
+        <div class="form-grupo">
+            <label for="peso">Peso (kg)</label>
+            <input type="number" step="0.1" id="peso" th:field="*{peso}"/>
+            <p class="erro-campo" th:if="${#fields.hasErrors('peso')}" th:errors="*{peso}"></p>
+        </div>
+
+        <div class="form-grupo">
+            <label for="sexo">Sexo</label>
+            <select id="sexo" th:field="*{sexo}">
+                <option value="">Selecione</option>
+                <option th:each="sexo : ${sexos}" th:value="${sexo}" th:text="${sexo}"></option>
+            </select>
+            <p class="erro-campo" th:if="${#fields.hasErrors('sexo')}" th:errors="*{sexo}"></p>
+        </div>
+
+        <div class="form-grupo">
+            <label for="castrado">
+                <input type="checkbox" id="castrado" th:field="*{castrado}"/>
+                Castrado
+            </label>
+        </div>
+
+        <button type="submit" class="botao">Salvar alterações</button>
+    </form>
+</main>
+</body>
+</html>

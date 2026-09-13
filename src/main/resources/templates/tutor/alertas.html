@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-br">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Alertas - ClyvoVet</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+<div th:replace="~{fragments/nav :: nav}"></div>
+<main>
+    <h1>Alertas de saúde</h1>
+
+    <div class="cartao" th:each="alerta : ${alertas}">
+        <span class="badge" th:text="${alerta.tipoAlerta}"></span>
+        <span th:if="${!alerta.lido}" class="badge" style="background-color:#fbe9e7;color:#b3261e;">Não lido</span>
+        <p th:text="${alerta.mensagem}"></p>
+        <p style="font-size:0.85rem;color:#666;">
+            Pet: <span th:text="${alerta.pet.nome}"></span> ·
+            Gerado em <span th:text="${#temporals.format(alerta.dataGeracao, 'dd/MM/yyyy HH:mm')}"></span>
+        </p>
+        <form th:if="${!alerta.lido}" th:action="@{/app/tutor/alertas/{id}/lido(id=${alerta.id})}" method="post">
+            <button type="submit" class="botao secundario">Marcar como lido</button>
+        </form>
+    </div>
+    <p th:if="${#lists.isEmpty(alertas)}">Nenhum alerta gerado para os seus pets.</p>
+</main>
+</body>
+</html>

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-br">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Meus pets - ClyvoVet</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+<div th:replace="~{fragments/nav :: nav}"></div>
+<main>
+    <h1>Meus pets</h1>
+    <p class="mensagem-sucesso" th:if="${mensagem}" th:text="${mensagem}"></p>
+    <p><a class="botao" th:href="@{/app/tutor/pets/novo}">Cadastrar novo pet</a></p>
+
+    <div class="lista-cartoes">
+        <div class="cartao" th:each="pet : ${pets}">
+            <h2 th:text="${pet.nome}">Nome do pet</h2>
+            <p>
+                <span class="badge" th:text="${pet.especie}">Espécie</span>
+                <span th:if="${pet.raca}" th:text="'· ' + ${pet.raca}"></span>
+            </p>
+            <a class="botao" th:href="@{/app/tutor/pets/{id}(id=${pet.id})}">Ver detalhes</a>
+            <a class="botao secundario" th:href="@{/app/tutor/consultas/nova(petId=${pet.id})}">Agendar consulta</a>
+            <a class="botao secundario" th:href="@{/app/tutor/pets/{id}/editar(id=${pet.id})}">Editar</a>
+            <form th:action="@{/app/tutor/pets/{id}/excluir(id=${pet.id})}" method="post" style="display:inline;"
+                  onsubmit="return confirm('Tem certeza que deseja excluir este pet?');">
+                <button type="submit" class="botao secundario">Excluir</button>
+            </form>
+        </div>
+        <p th:if="${#lists.isEmpty(pets)}">Nenhum pet cadastrado para o seu perfil.</p>
+    </div>
+</main>
+</body>
+</html>

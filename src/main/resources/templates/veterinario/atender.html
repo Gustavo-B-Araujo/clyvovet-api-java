@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-br">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Atender consulta - ClyvoVet</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+<div th:replace="~{fragments/nav :: nav}"></div>
+<main>
+    <p><a th:href="@{/app/veterinario/agenda}">&larr; Voltar para a agenda</a></p>
+    <h1>Atender consulta</h1>
+    <p>
+        Pet: <strong th:text="${consulta.pet.nome}"></strong> ·
+        Tutor: <span th:text="${consulta.pet.tutor.nome}"></span> ·
+        <span th:text="${#temporals.format(consulta.dataHora, 'dd/MM/yyyy HH:mm')}"></span>
+    </p>
+
+    <form class="cartao" th:action="@{/app/veterinario/consultas/{id}/atender(id=${consulta.id})}" th:object="${form}" method="post">
+        <div class="form-grupo">
+            <label for="diagnostico">Diagnóstico</label>
+            <textarea id="diagnostico" th:field="*{diagnostico}" rows="3"></textarea>
+            <p class="erro-campo" th:if="${#fields.hasErrors('diagnostico')}" th:errors="*{diagnostico}"></p>
+        </div>
+
+        <div class="form-grupo">
+            <label for="tratamento">Tratamento</label>
+            <textarea id="tratamento" th:field="*{tratamento}" rows="3"></textarea>
+            <p class="erro-campo" th:if="${#fields.hasErrors('tratamento')}" th:errors="*{tratamento}"></p>
+        </div>
+
+        <div class="form-grupo">
+            <label>
+                <input type="checkbox" th:field="*{aplicarVacina}" onchange="document.getElementById('bloco-vacina').hidden = !this.checked;"/>
+                Aplicar vacina nesta consulta
+            </label>
+        </div>
+        <div id="bloco-vacina" th:hidden="${form.aplicarVacina} == false">
+            <div class="form-grupo">
+                <label for="vacinaNome">Nome da vacina</label>
+                <input type="text" id="vacinaNome" th:field="*{vacinaNome}"/>
+                <p class="erro-campo" th:if="${#fields.hasErrors('vacinaNome')}" th:errors="*{vacinaNome}"></p>
+            </div>
+            <div class="form-grupo">
+                <label for="vacinaFabricante">Fabricante</label>
+                <input type="text" id="vacinaFabricante" th:field="*{vacinaFabricante}"/>
+            </div>
+            <div class="form-grupo">
+                <label for="vacinaDiasProximaDose">Próxima dose em (dias)</label>
+                <input type="number" id="vacinaDiasProximaDose" th:field="*{vacinaDiasProximaDose}"/>
+                <p class="erro-campo" th:if="${#fields.hasErrors('vacinaDiasProximaDose')}" th:errors="*{vacinaDiasProximaDose}"></p>
+            </div>
+        </div>
+
+        <div class="form-grupo">
+            <label>
+                <input type="checkbox" th:field="*{necessitaRetorno}" onchange="document.getElementById('bloco-retorno').hidden = !this.checked;"/>
+                Agendar retorno
+            </label>
+        </div>
+        <div id="bloco-retorno" th:hidden="${form.necessitaRetorno} == false">
+            <div class="form-grupo">
+                <label for="retornoDias">Retorno em (dias)</label>
+                <input type="number" id="retornoDias" th:field="*{retornoDias}"/>
+                <p class="erro-campo" th:if="${#fields.hasErrors('retornoDias')}" th:errors="*{retornoDias}"></p>
+            </div>
+        </div>
+
+        <button type="submit" class="botao">Concluir atendimento</button>
+    </form>
+</main>
+</body>
+</html>

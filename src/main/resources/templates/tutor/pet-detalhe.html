@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-br">
+<head>
+    <meta charset="UTF-8"/>
+    <title th:text="${pet.nome} + ' - ClyvoVet'">Pet - ClyvoVet</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+<div th:replace="~{fragments/nav :: nav}"></div>
+<main>
+    <p><a th:href="@{/app/tutor/pets}">&larr; Meus pets</a></p>
+    <p class="mensagem-sucesso" th:if="${mensagem}" th:text="${mensagem}"></p>
+
+    <h1 th:text="${pet.nome}">Nome do pet</h1>
+    <p>
+        <span class="badge" th:text="${pet.especie}"></span>
+        <span th:if="${pet.raca}" th:text="'· ' + ${pet.raca}"></span>
+        <span th:if="${pet.peso}" th:text="'· ' + ${pet.peso} + ' kg'"></span>
+    </p>
+    <a class="botao" th:href="@{/app/tutor/consultas/nova(petId=${pet.id})}">Agendar nova consulta</a>
+    <a class="botao secundario" th:href="@{/app/tutor/pets/{id}/editar(id=${pet.id})}">Editar pet</a>
+    <form th:action="@{/app/tutor/pets/{id}/excluir(id=${pet.id})}" method="post" style="display:inline;"
+          onsubmit="return confirm('Tem certeza que deseja excluir este pet?');">
+        <button type="submit" class="botao secundario">Excluir pet</button>
+    </form>
+
+    <div class="cartao">
+        <h2>Consultas</h2>
+        <table>
+            <thead>
+            <tr>
+                <th>Data/hora</th>
+                <th>Tipo</th>
+                <th>Status</th>
+                <th>Veterinário</th>
+                <th>Ações</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="consulta : ${pet.consultas}">
+                <td th:text="${#temporals.format(consulta.dataHora, 'dd/MM/yyyy HH:mm')}"></td>
+                <td th:text="${consulta.tipoConsulta}"></td>
+                <td th:text="${consulta.statusConsulta}"></td>
+                <td th:text="${consulta.veterinario.nome}"></td>
+                <td th:if="${consulta.statusConsulta.name() == 'AGENDADA' or consulta.statusConsulta.name() == 'CONFIRMADA'}">
+                    <a class="botao secundario" th:href="@{/app/tutor/consultas/{id}/remarcar(id=${consulta.id})}">Remarcar</a>
+                    <form th:action="@{/app/tutor/consultas/{id}/cancelar(id=${consulta.id})}" method="post" style="display:inline;"
+                          onsubmit="return confirm('Tem certeza que deseja cancelar esta consulta?');">
+                        <button type="submit" class="botao secundario">Cancelar</button>
+                    </form>
+                </td>
+                <td th:unless="${consulta.statusConsulta.name() == 'AGENDADA' or consulta.statusConsulta.name() == 'CONFIRMADA'}"></td>
+            </tr>
+            </tbody>
+        </table>
+        <p th:if="${#lists.isEmpty(pet.consultas)}">Nenhuma consulta registrada.</p>
+    </div>
+
+    <div class="cartao">
+        <h2>Vacinas</h2>
+        <table>
+            <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Aplicada em</th>
+                <th>Próxima dose</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="vacina : ${pet.vacinas}">
+                <td th:text="${vacina.nome}"></td>
+                <td th:text="${#temporals.format(vacina.dataAplicacao, 'dd/MM/yyyy')}"></td>
+                <td th:text="${vacina.dataProximaDose != null ? #temporals.format(vacina.dataProximaDose, 'dd/MM/yyyy') : '-'}"></td>
+            </tr>
+            </tbody>
+        </table>
+        <p th:if="${#lists.isEmpty(pet.vacinas)}">Nenhuma vacina registrada.</p>
+    </div>
+
+    <div class="cartao">
+        <h2>Alertas de saúde</h2>
+        <ul>
+            <li th:each="alerta : ${pet.alertas}">
+                <span class="badge" th:text="${alerta.tipoAlerta}"></span>
+                <span th:text="${alerta.mensagem}"></span>
+            </li>
+        </ul>
+        <p th:if="${#lists.isEmpty(pet.alertas)}">Nenhum alerta gerado para este pet.</p>
+    </div>
+</main>
+</body>
+</html>

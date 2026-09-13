@@ -1,0 +1,14 @@
+<header xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+        th:fragment="nav" class="topo">
+    <a th:href="@{/app}">🐾 ClyvoVet</a>
+    <nav>
+        <a sec:authorize="hasRole('TUTOR')" th:href="@{/app/tutor/pets}">Meus pets</a>
+        <a sec:authorize="hasRole('TUTOR')" th:href="@{/app/tutor/alertas}">Alertas</a>
+        <a sec:authorize="hasRole('VETERINARIO')" th:href="@{/app/veterinario/agenda}">Agenda</a>
+        <a sec:authorize="hasRole('VETERINARIO')" th:href="@{/app/veterinario/consultas/nova}">Nova consulta</a>
+        <span sec:authentication="name"></span>
+        <form th:action="@{/logout}" method="post" style="display:inline;">
+            <button type="submit" class="botao secundario" style="padding:0.3rem 0.8rem;">Sair</button>
+        </form>
+    </nav>
+</header>

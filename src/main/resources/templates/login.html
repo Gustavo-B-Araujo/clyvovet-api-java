@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-br">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Entrar - ClyvoVet</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+<main class="login-container">
+    <div class="cartao">
+        <h1>🐾 ClyvoVet</h1>
+        <p>Acesse sua conta de tutor ou veterinário.</p>
+
+        <p class="mensagem-erro" th:if="${param.error}">E-mail ou senha inválidos.</p>
+        <p class="mensagem-sucesso" th:if="${param.logout}">Você saiu da aplicação.</p>
+        <p class="mensagem-sucesso" th:if="${mensagem}" th:text="${mensagem}"></p>
+
+        <form th:action="@{/login}" method="post">
+            <div class="form-grupo">
+                <label for="username">E-mail</label>
+                <input type="email" id="username" name="username" required="required" autofocus="autofocus"/>
+            </div>
+            <div class="form-grupo">
+                <label for="password">Senha</label>
+                <input type="password" id="password" name="password" required="required"/>
+            </div>
+            <button type="submit" class="botao">Entrar</button>
+        </form>
+
+        <p style="margin-top:1rem;"><a th:href="@{/cadastro}">Ainda não tem conta? Cadastre-se</a></p>
+
+        <p style="margin-top:1.5rem; font-size:0.85rem; color:#666;">
+            Contas de demonstração:<br/>
+            Tutor: tutor@clyvovet.com.br / tutor123<br/>
+            Veterinário: veterinario@clyvovet.com.br / vet123
+        </p>
+    </div>
+</main>
+</body>
+</html>

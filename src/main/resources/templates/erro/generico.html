@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-br">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Ops - ClyvoVet</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+<main>
+    <div class="cartao">
+        <h1>Não foi possível concluir a operação</h1>
+        <p th:text="${mensagem}">Mensagem de erro</p>
+        <a class="botao" th:href="@{/app}">Voltar ao início</a>
+    </div>
+</main>
+</body>
+</html>
