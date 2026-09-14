@@ -3,6 +3,8 @@
 API + aplicação web para centralização do histórico de saúde de pets e geração de alertas preventivos.
 Projeto desenvolvido como solução para o **Challenge FIAP 2026** – turma Java Advanced.
 
+Vídeo de demonstração: https://youtu.be/22aJcCVcHc4
+
 ---
 
 ## 📋 Sumário
