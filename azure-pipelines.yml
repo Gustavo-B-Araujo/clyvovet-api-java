@@ -26,7 +26,18 @@ stages:
 
           - script: |
               chmod +x gradlew
-              ./gradlew bootJar --no-daemon
+              ./gradlew test --no-daemon
+            displayName: Executar testes
+
+          - task: PublishTestResults@2
+            displayName: Publicar resultados dos testes
+            condition: succeededOrFailed()
+            inputs:
+              testResultsFormat: JUnit
+              testResultsFiles: build/test-results/test/*.xml
+              testRunTitle: Testes unitários
+
+          - script: ./gradlew bootJar --no-daemon
             displayName: Build com Gradle
 
           - task: CopyFiles@2
