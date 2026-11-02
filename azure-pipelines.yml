@@ -1,0 +1,62 @@
+trigger:
+  branches:
+    include:
+      - main
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  azureSubscription: azure-clyvo
+  webAppName: app-clyvo-api
+
+stages:
+  - stage: Build
+    displayName: Build
+    jobs:
+      - job: BuildJar
+        displayName: Gerar JAR
+        steps:
+          - task: JavaToolInstaller@0
+            displayName: Java 21
+            inputs:
+              versionSpec: '21'
+              jdkArchitectureOption: x64
+              jdkSourceOption: PreInstalled
+
+          - script: |
+              chmod +x gradlew
+              ./gradlew bootJar --no-daemon
+            displayName: Build com Gradle
+
+          - task: CopyFiles@2
+            displayName: Copiar JAR
+            inputs:
+              SourceFolder: build/libs
+              Contents: '*.jar'
+              TargetFolder: $(Build.ArtifactStagingDirectory)
+
+          - publish: $(Build.ArtifactStagingDirectory)
+            artifact: drop
+            displayName: Publicar artefato
+
+  - stage: Deploy
+    displayName: Deploy
+    dependsOn: Build
+    condition: succeeded()
+    jobs:
+      - job: DeployWebApp
+        displayName: Deploy no App Service
+        steps:
+          - download: current
+            artifact: drop
+            displayName: Baixar artefato
+
+          - task: AzureWebApp@1
+            displayName: Deploy do JAR
+            inputs:
+              azureSubscription: $(azureSubscription)
+              appType: webAppLinux
+              appName: $(webAppName)
+              package: $(Pipeline.Workspace)/drop/*.jar
+              runtimeStack: JAVA|21-java21
