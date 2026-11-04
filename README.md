@@ -1,53 +1,26 @@
-# 🐾 ClyvoVet
+# ClyvoVet
 
 API + aplicação web para centralização do histórico de saúde de pets e geração de alertas preventivos.
 Projeto desenvolvido como solução para o **Challenge FIAP 2026** – turma Java Advanced.
 
-Vídeo de demonstração: https://youtu.be/22aJcCVcHc4
+Vídeo de demonstração: https://youtu.be/XIvTQeDpgEs
 
 ---
 
-## 📋 Sumário
+## Sumário
 
-- [🆕 Novidades da Sprint 3](#-novidades-da-sprint-3)
-- [📖 Sobre o projeto](#-sobre-o-projeto)
-- [🛠️ Tecnologias utilizadas](#️-tecnologias-utilizadas)
-- [⚙️ Pré-requisitos](#️-pré-requisitos)
-- [🗄️ Configuração do banco de dados](#️-configuração-do-banco-de-dados)
-- [🚀 Como executar o projeto](#-como-executar-o-projeto)
-- [🌐 Usando a aplicação web](#-usando-a-aplicação-web)
-- [🧪 Testando a API](#-testando-a-api)
-- [📚 Documentação da API (Swagger)](#-documentação-da-api-swagger)
-- [🧱 Estrutura do projeto](#-estrutura-do-projeto)
-- [👥 Equipe](#-equipe)
+- [Sobre o projeto](#sobre-o-projeto)
+- [Tecnologias utilizadas](#tecnologias-utilizadas)
+- [Como executar localmente](#como-executar-localmente)
+- [Usando a aplicação web](#usando-a-aplicação-web)
+- [Testando a API](#testando-a-api)
+- [Integração multidisciplinar](#integração-multidisciplinar)
+- [Estrutura do projeto](#estrutura-do-projeto)
+- [Equipe](#equipe)
 
 ---
 
-## 🆕 Novidades da Sprint 3
-
-1. **Camada de visualização (frontend)** — aplicação web server-side renderizada com
-   **Thymeleaf**, com login e páginas para tutores e veterinários (`src/main/resources/templates`,
-   controllers em `br.com.fiap.clyvovet.web`).
-2. **Massa de dados de demonstração** — um `DataSeeder` (`CommandLineRunner`) cria, na
-   primeira subida da aplicação, 1 clínica, 1 veterinário, 2 tutores, 2 pets e os 2 usuários
-   de demonstração usados no login. O schema continua sendo criado/atualizado automaticamente
-   pelo Hibernate (`spring.jpa.hibernate.ddl-auto=update`).
-3. **Spring Security** — dois perfis de usuário (`TUTOR` e `VETERINARIO`), com login por
-   formulário, senhas com hash BCrypt e proteção de rotas por perfil (`/app/tutor/**` só para
-   tutores, `/app/veterinario/**` só para veterinários). A API REST existente continua aberta
-   (Swagger/Postman), apenas a camada web nova é protegida.
-4. **Dois fluxos completos** (além dos CRUDs já existentes):
-   - **Agendamento de consulta pelo tutor** (`AgendamentoConsultaService`): o tutor escolhe um
-     pet seu, um veterinário e um horário; o sistema valida que o pet pertence ao tutor logado
-     e que o veterinário está livre naquele horário antes de confirmar o agendamento.
-   - **Atendimento da consulta pelo veterinário** (`AtendimentoConsultaService`): o veterinário
-     conclui a consulta registrando diagnóstico e tratamento e, opcionalmente, registra a
-     aplicação de uma vacina e/ou a necessidade de retorno — em ambos os casos o sistema
-     **gera automaticamente um Alerta de Saúde** (próxima dose ou retorno pendente) para o pet.
-
----
-
-## 📖 Sobre o projeto
+## Sobre o projeto
 
 O **ClyvoVet** resolve o problema da fragmentação na jornada de saúde do pet.  
 Tutores, clínicas e veterinários podem registrar e consultar:
@@ -66,7 +39,7 @@ A API segue os princípios RESTful, utiliza:
 
 ---
 
-## 🛠️ Tecnologias utilizadas
+## Tecnologias utilizadas
 
 - **Java 21**
 - **Spring Boot 3.4.5**
@@ -83,83 +56,44 @@ A API segue os princípios RESTful, utiliza:
 
 ---
 
-## ⚙️ Pré-requisitos
+## Como executar localmente
 
-Antes de executar o projeto, certifique-se de ter instalado:
+A aplicação já está publicada (veja a próxima seção). Para rodar na sua máquina:
 
-- **JDK 21** (ou superior compatível)
-- **Oracle Database** (local ou remoto)
-- **Gradle** (opcional – o projeto inclui o Gradle Wrapper)
-- **Git**
-- **Postman** (opcional)
+**Pré-requisitos:** JDK 21, acesso a um Oracle Database e Git (o Gradle Wrapper já está incluído).
 
----
-
-## 🗄️ Configuração do banco de dados
-
-1. Certifique-se de que o Oracle Database está ativo.
-2. Use um usuário/schema com privilégios para criar tabelas, sequences e constraints — o
-   schema é criado e atualizado automaticamente pelo Hibernate (`ddl-auto=update`), a partir
-   das entidades JPA.
-3. Altere o arquivo `src/main/resources/application.properties` com as suas credenciais:
-
-```properties
-spring.datasource.url=jdbc:oracle:thin:@oracle.fiap.com.br:1521:orcl
-spring.datasource.username=SEU_USUARIO
-spring.datasource.password=SUA_SENHA
-```
-
-> **Nota:** Na primeira subida da aplicação, além de criar/atualizar o schema, o Hibernate
-> encontra o banco sem a tabela `TB_USUARIO` populada e o `DataSeeder` (`CommandLineRunner`,
-> em `br.com.fiap.clyvovet.config`) insere automaticamente uma massa mínima de dados: 1
-> clínica, 1 veterinário, 2 tutores, 2 pets e os 2 usuários de demonstração usados no login.
-> Nas subidas seguintes, como já existem usuários cadastrados, o `DataSeeder` não insere
-> nada novamente.
-
----
-
-# 🚀 Como executar o projeto
-
-## 1. Clone o repositório
+1. Clone o repositório:
 
 ```bash
 git clone https://github.com/Gustavo-B-Araujo/clyvovet-api-java
 cd clyvovet-api-java
 ```
 
-## 2. Execute a aplicação via Gradle Wrapper
+2. Crie o arquivo `src/main/resources/application-local.properties` (já está no `.gitignore`) com as suas credenciais:
 
-### Linux / Mac
+```properties
+spring.datasource.url=jdbc:oracle:thin:@HOST:1521:SID
+spring.datasource.username=SEU_USUARIO
+spring.datasource.password=SUA_SENHA
+jwt.secret=UMA_CHAVE_SECRETA_LONGA
+```
+
+3. Execute:
 
 ```bash
-./gradlew bootRun
+./gradlew bootRun        # Linux / Mac
+gradlew.bat bootRun      # Windows
 ```
 
-### Windows
+A aplicação sobe em `http://localhost:8080`. O schema é criado pelo Hibernate e, na primeira execução, o `DataSeeder` insere os dados de demonstração e as contas de login abaixo.
 
-```bash
-gradlew.bat bootRun
-```
-
-Ou via IntelliJ IDEA: abra o projeto e execute a classe `ClyvovetApplication`.
-
-A aplicação iniciará na porta `8080`.
-
-Você verá no console:
-
-```text
-Started ClyvovetApplication ...
-```
+Para rodar os testes: `./gradlew test`.
 
 ---
 
-# 🌐 Usando a aplicação web
+## Usando a aplicação web
 
-Com a aplicação rodando, acesse:
-
-```text
-http://localhost:8080/login
-```
+Acesse: https://app-clyvo-api.azurewebsites.net/
 
 Use uma das contas de demonstração criadas pelo `DataSeeder`:
 
@@ -168,7 +102,7 @@ Use uma das contas de demonstração criadas pelo `DataSeeder`:
 | Tutor        | tutor@clyvovet.com.br         | tutor123  |
 | Veterinário  | veterinario@clyvovet.com.br   | vet123    |
 
-## Fluxo do tutor
+### Fluxo do tutor
 
 1. Login com a conta de tutor → `/app/tutor/pets` lista os pets do tutor autenticado.
 2. Ao abrir um pet, o tutor vê consultas, vacinas e alertas de saúde daquele pet.
@@ -176,7 +110,7 @@ Use uma das contas de demonstração criadas pelo `DataSeeder`:
    O sistema valida que o pet é dele e que o veterinário está livre naquele horário.
 4. Em **"Alertas"**, o tutor visualiza e marca como lidos os alertas gerados para seus pets.
 
-## Fluxo do veterinário
+### Fluxo do veterinário
 
 1. Login com a conta de veterinário → `/app/veterinario/agenda` lista as consultas pendentes
    dele (agendadas, confirmadas ou em andamento).
@@ -189,15 +123,11 @@ Use uma das contas de demonstração criadas pelo `DataSeeder`:
 
 ---
 
-# 🧪 Testando a API
+## Testando a API
 
-## ✅ 1. Usando o Swagger UI (recomendado)
+### 1. Usando o Swagger UI
 
-Acesse:
-
-```text
-http://localhost:8080/swagger-ui.html
-```
+Acesse: https://app-clyvo-api.azurewebsites.net/swagger-ui/index.html
 
 Lá você pode:
 
@@ -207,7 +137,7 @@ Lá você pode:
 
 ---
 
-### Ordem recomendada para testes
+#### Ordem recomendada para testes
 
 Execute as requisições nesta ordem:
 
@@ -223,7 +153,7 @@ Execute as requisições nesta ordem:
 
 ---
 
-### Observações
+#### Observações
 
 Para endpoints `GET`, utilize filtros como:
 
@@ -235,7 +165,7 @@ Para `POST`, `PUT` e `DELETE`, garanta que os IDs relacionados existam no banco.
 
 ---
 
-## ✅ 3. Exemplos de endpoints
+### 2. Exemplos de endpoints
 
 ```http
 POST   /tutores
@@ -253,41 +183,21 @@ PATCH  /alertas/{id}/lido
 
 ---
 
-## ✅ 4. Populando o banco
+## Integração multidisciplinar
 
-O banco será criado vazio.
+A API em Java é o núcleo do ClyvoVet e se integra aos demais componentes do projeto:
 
-Você pode:
+| Disciplina | Como foi aplicada na solução |
+|---|---|
+| **Java Advanced** | API REST + aplicação web (Spring Boot, JPA, Security/JWT, Thymeleaf), publicada online. |
+| **DevOps / Cloud** | Código no Azure Repos, pipeline CI/CD (testes, build do JAR e deploy no Azure App Service) e banco Oracle em container (ACI) no grupo de recursos `ch-clyvo`. |
+| **Mobile** | O aplicativo mobile (Android, `com.clyvo.app`) está registrado no projeto Firebase `clyvovet-ch`. |
 
-- Executar scripts SQL da pasta `documents/` (caso existam)
-
-### Recomendação mínima de dados
-
-- 2 tutores
-- 2 pets
-- 1 clínica
-- 1 veterinário
-- 1 consulta
+Evidências (prints): [`docs/evidencias/`](docs/evidencias/)
 
 ---
 
-# 📚 Documentação da API (Swagger)
-
-Com a aplicação em execução, acesse:
-
-```text
-http://localhost:8080/swagger-ui.html
-```
-
-A interface Swagger permite:
-
-- Navegar pelos endpoints
-- Ver exemplos de request/response
-- Testar a API diretamente
-
----
-
-# 🧱 Estrutura do projeto
+## Estrutura do projeto
 
 ```text
 src/main/java/br/com/fiap/clyvovet/
@@ -313,7 +223,7 @@ src/main/resources/
 
 ---
 
-# 👥 Equipe
+## Equipe
 
 | Nome | RM |
 |---|---|
